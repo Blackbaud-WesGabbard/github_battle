@@ -1,6 +1,7 @@
 var React = require('react');
 var PropTypes = require('prop-types');
 var api = require('../utils/api');
+var Loading = require('./Loading');
 
 function SelectLanguage (props) {
   var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'];
@@ -30,7 +31,7 @@ function RepoGrid (props) {
             <div className="popular-rank">#{index + 1}</div>
             <ul className="space-list-items">
               <li>
-                <img 
+                <img
                   className="avatar"
                   src={repo.owner.avatar_url}
                   alt={'Avatar for ' + repo.owner.login}
@@ -58,7 +59,6 @@ SelectLanguage.propTypes = {
 
 class Popular extends React.Component {
   constructor (props) {
-    console.log('enmter cons');
     super();
     this.state = {
       selectedLanguage: 'All',
@@ -94,12 +94,12 @@ class Popular extends React.Component {
   render() {
     return (
       <div>
-        <SelectLanguage 
+        <SelectLanguage
           selectedLanguage={this.state.selectedLanguage}
           onSelect={this.updateLanguage}
         />
         {!this.state.repos
-          ? <p>Loading</p>
+          ? <Loading text="DOWLOADING" speed="10"/>
           : <RepoGrid repos={this.state.repos} />}
       </div>
     )
