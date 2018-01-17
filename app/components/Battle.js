@@ -27,16 +27,18 @@ class PlayerInput extends React.Component {
     );
   }
   render() {
+    const {username}= this.state
+    const {label} = this.props
     return (
       <form className='column' onSubmit={this.handleSubmit}>
         <label className='header' htmlFor='username'>
-          {this.props.label}
+          {label}
         </label>
         <input
           id='username'
           placeholder='github username'
           type='text'
-          value={this.state.username}
+          value={username}
           autoComplete='off'
           onChange={this.handleChange}
         />
@@ -50,7 +52,6 @@ class PlayerInput extends React.Component {
     )
   }
 }
-
 
 PlayerInput.propTypes = {
   id: PropTypes.string.isRequired,
@@ -85,7 +86,7 @@ class Battle extends React.Component {
   }
 
   handleReset(id) {
-    this.setState(() => {(
+    this.setState(() => ({
       [id + 'Name']: '',
       [id + 'Image']: null
     }))
@@ -113,8 +114,7 @@ class Battle extends React.Component {
             >
               <button
                 className="reset"
-                onClick={this.handleReset.bind(null, 'playerOne')}
-              >
+                onClick={() => this.handleReset('playerOne')}>
                 Reset
               </button>
             </PlayerPreview>
@@ -127,8 +127,7 @@ class Battle extends React.Component {
             >
               <button
                 className="reset"
-                onClick={this.handleReset.bind(null, 'playerTwo')}
-              >
+                onClick={() => this.handleReset('playerTwo')}>
                 Reset
               </button>
             </PlayerPreview>
@@ -148,8 +147,8 @@ class Battle extends React.Component {
             <Link
               className="button"
               to={{
-                pathname: match.url + '/results',
-                search: '?playerOneName=' + playerOneName +' &playerTwoName=' + playerTwoName
+                pathname: `{$match.url}/results`,
+                search: `?playerOneName=${playerOneName}&playerTwoName=${playerTwoName}`
               }}
               >
               BATTLE!!!
