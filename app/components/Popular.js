@@ -1,34 +1,34 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const api = require('../utils/api');
-const Loading = require('./Loading');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { fetchPopularRepos } from '../utils/api';
+import Loading from './Loading';
 
-function SelectLanguage ({selectedLanguage, onSelect}) {
+function SelectLanguage ({ selectedLanguage, onSelect }) {
   const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'];
   return (
-    <ul className="languages">
+    <ul className='languages'>
       {languages.map((lang) => (
         <li
-          style={lang === props.selectedLanguage ? {color: 'red'}: null}
+          style={lang === selectedLanguage ? {color: '#d0021b'} : null}
           onClick={() => onSelect(lang)}
           key={lang}>
-          {lang}
+            {lang}
         </li>
       ))}
     </ul>
   )
 }
 
-function RepoGrid ({repos}) {
+function RepoGrid ({ repos }) {
   return (
-    <ul className="popular-list">
-      {repos.map(({name, owner, stargazers_count, html_url}, index) => (
-        <li key={name} className="popular-item">
-          <div className="popular-rank">#{index + 1}</div>
-          <ul className="space-list-items">
+    <ul className='popular-list'>
+      {repos.map(({ name, stargazers_count, owner, html_url }, index) => (
+        <li key={name} className='popular-item'>
+          <div className='popular-rank'>#{index + 1}</div>
+          <ul className='space-list-items'>
             <li>
               <img
-                className="avatar"
+                className='avatar'
                 src={owner.avatar_url}
                 alt={'Avatar for ' + owner.login}
               />
@@ -50,47 +50,44 @@ RepoGrid.propTypes = {
 SelectLanguage.propTypes = {
   selectedLanguage: PropTypes.string.isRequired,
   onSelect: PropTypes.func.isRequired,
-}
+};
 
 class Popular extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super();
     this.state = {
       selectedLanguage: 'All',
-      repos: null
+      repos: null,
     };
 
     this.updateLanguage = this.updateLanguage.bind(this);
   }
-
-  componentDidMount () {
-    this.updateLanguage(this.state.selectedLanguage);
+  componentDidMount() {
+    this.updateLanguage(this.state.selectedLanguage)
   }
-
   updateLanguage(lang) {
     this.setState(() => ({
       selectedLanguage: lang,
       repos: null
     }));
 
-    api.fetchPopularRepos(lang)
-      .then((repos) => this.setState(() => ({repos})));
+    fetchPopularRepos(lang)
+      .then((repos) => this.setState(() => ({ repos })));
   }
-
   render() {
-    const {selectedLanguage, repos} = this.state
+    const { selectedLanguage, repos } = this.state
+
     return (
       <div>
         <SelectLanguage
           selectedLanguage={selectedLanguage}
-          onSelect={this.updateLanguage}
-        />
-        {!this.state.repos
-          ? <Loading text="DOWLOADING" speed="10"/>
+          onSelect={this.updateLanguage} />
+        {!repos
+          ? <Loading />
           : <RepoGrid repos={repos} />}
       </div>
     )
   }
 }
 
-module.exports = Popular;
+export default Popular;
